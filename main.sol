@@ -43,7 +43,7 @@ contract FarmVille {
         uint16 size;
 
         /// A mapping of slot position to slot data structure
-        mapping (uint32 => Field) slots;
+        mapping (uint32 => Field) fields;
 
         /// A mapping of seedId to amount of seeds in the inventory of that seed type.
         mapping (uint32 => uint128) seedInventory;
@@ -93,7 +93,7 @@ contract FarmVille {
         // TODO verify slot is present
 
         // Make sure that the field is empty
-        assert(player.slots[slot].crop == 0);
+        assert(player.fields[slot].crop == 0);
 
         // Make sure seeds are present
         uint32 amount = 1;  // TODO this can be made varying
@@ -101,9 +101,9 @@ contract FarmVille {
 
         player.seedInventory[seedId] -= 1;
 
-        player.slots[slot].crop = seedId;
-        player.slots[slot].sowed = block.timestamp;
-        player.slots[slot].watered = block.timestamp;
+        player.fields[slot].crop = seedId;
+        player.fields[slot].sowed = block.timestamp;
+        player.fields[slot].watered = block.timestamp;
     }
 
     /// Water a field
@@ -113,11 +113,11 @@ contract FarmVille {
         // TODO verify slot is present
 
         // Make sure the field has crops
-        assert(player.slots[slot].crop != 0);
+        assert(player.fields[slot].crop != 0);
 
         // TODO check if the crops have died
 
-        player.slots[slot].watered = block.timestamp;
+        player.fields[slot].watered = block.timestamp;
     }
 
     /// Harvest a field
@@ -127,16 +127,16 @@ contract FarmVille {
         // TODO verify slot is present
 
         // Make sure the field has crops
-        assert(player.slots[slot].crop != 0);
+        assert(player.fields[slot].crop != 0);
 
         // TODO check if the crops have died
 
         // TODO check if the crops have rotten
 
         uint32 seedId = player.slots[slot].crop;
-        player.slots[slot].crop = 0;
-        player.slots[slot].sowed = 0;
-        player.slots[slot].watered = 0;
+        player.fields[slot].crop = 0;
+        player.fields[slot].sowed = 0;
+        player.fields[slot].watered = 0;
 
         uint32 amount = 1;  // TODO make it variable based on quality of the yield
         player.seedInventory[seedId] += amount;
